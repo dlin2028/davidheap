@@ -36,12 +36,12 @@ namespace DavidHeaps
                     Console.WriteLine("------------Maxheap------------");
                     for (int i = 0; i < maxHeap.Count; i++)
                     {
-                        Console.WriteLine(maxHeap.Array[i].Item);
+                        Console.WriteLine(maxHeap.Array[i]);
                     }
                     Console.WriteLine("------------Minheap------------");
                     for (int i = 0; i < minHeap.Count; i++)
                     {
-                        Console.WriteLine(minHeap.Array[i].Item);
+                        Console.WriteLine(minHeap.Array[i]);
                     }
                 }
                 else

@@ -8,19 +8,18 @@ namespace DavidHeaps
 {
     class MaxHeap<T> where T : IComparable
     {
-        private HeapNode<T> head;
         public int Count;
         public int Capacity = 10;
-        public HeapNode<T>[] Array;
+        public T[] Array;
 
         public MaxHeap()
         {
-            Array = new HeapNode<T>[Capacity];
+            Array = new T[Capacity];
         }
 
         public void Resize(int size)
         {
-            var newArray = new HeapNode<T>[size];
+            var newArray = new T[size];
             for (int i = 0; i < size; i++)
             {
                 newArray[i] = Array[i];
@@ -30,42 +29,33 @@ namespace DavidHeaps
         public void HeapifyUp(T item)
         {
             Count++;
-            if (Count >= Capacity)
+            if (Count >= Capacity - 2)
             {
                 Resize(Capacity *= 2);
             }
-
-            HeapNode<T> node = new HeapNode<T>(item);
-            if (head == null)
+            
+            if (Array[0] == null)
             {
-                head = node;
-                Array[0] = head;
+                Array[0] = item;
                 return;
             }
-            node.Parent = Array[(Count - 1) / 2];
-
-
-            if (node.Parent.LeftNode == null)
-            {
-                node.Parent.LeftNode = node;
-            }
-            else
-            {
-                node.Parent.RightNode = node;
-            }
-            Array[Count - 1] = node;
+            Array[Count - 1] = item;
 
             heapifyUp(Count - 1);
         }
         private void heapifyUp(int index)
         {
-            HeapNode<T> parent = Array[(index - 1) / 2];
-            HeapNode<T> currentNode = Array[index];
-            if (parent.Item.CompareTo(currentNode.Item) < 0)
+            T parent = Array[(index - 1) / 2];
+            T currentNode = Array[index];
+            if (parent.CompareTo(currentNode) < 0)
             {
-                T temp = parent.Item;
-                parent.Item = currentNode.Item;
-                currentNode.Item = temp;
+                T temp = parent;
+                parent = currentNode;
+                currentNode = temp;
+
+                Array[index] = currentNode;
+                Array[(index - 1) / 2] = parent;
+
                 heapifyUp((index - 1) / 2);
             }
         }
@@ -77,52 +67,43 @@ namespace DavidHeaps
             {
                 Resize(Capacity /= 2);
             }
-            head = Array[Count];
+            Array[0] = Array[Count];
+            Array[Count] = default(T);
 
-            heapifyDown(Count);
+            heapifyDown(0);
         }
         private void heapifyDown(int index)
         {
-            HeapNode<T> currentNode = Array[index];
-
-            HeapNode<T> leftNode = null;
-            if (index * 2 + 1 > Count)
-            {
-                leftNode = Array[index * 2 + 1];
-            }
-            if (leftNode == null)
-            {
-                return;
-            }
-
-            HeapNode<T> rightNode = null;
-            if (index * 2 + 2 > Count)
-            {
-                rightNode = Array[index * 2 + 2];
-            }
-            if (rightNode == null)
-            {
-                T temp = leftNode.Item;
-                leftNode.Item = currentNode.Item;
-                currentNode.Item = temp;
-                heapifyUp(index * 2 + 1);
-                return;
-            }
+            T currentNode = Array[index];
+            T leftNode = Array[index * 2 + 1];
+            T rightNode = Array[index * 2 + 2];
 
             //if the left node is less than right node
-            if (leftNode.Item.CompareTo(rightNode.Item) < 0)
+            if (leftNode.CompareTo(rightNode) > 0)
             {
-                T temp = leftNode.Item;
-                leftNode.Item = currentNode.Item;
-                currentNode.Item = temp;
-                heapifyUp(index * 2 + 1);
+                if (currentNode.CompareTo(leftNode) > 0)
+                {
+                    return;
+                }
+                T temp = leftNode;
+                leftNode = currentNode;
+                currentNode = temp;
+
+                Array[index * 2 + 1] = leftNode;
+                Array[index] = currentNode;
+
+                heapifyDown(index * 2 + 1);
             }
-            else
+            else if (currentNode.CompareTo(rightNode) > 0)
             {
-                T temp = rightNode.Item;
-                leftNode.Item = currentNode.Item;
-                currentNode.Item = temp;
-                heapifyUp(index * 2 + 2);
+                T temp = rightNode;
+                rightNode = currentNode;
+                currentNode = temp;
+
+                Array[index * 2 + 2] = rightNode;
+                Array[index] = currentNode;
+
+                heapifyDown(index * 2 + 2);
             }
         }
     }
