@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DavidHeaps
 {
-    class MaxHeap<T> where T : IComparable
+    public class MaxHeap<T> where T : IComparable
     {
         public int Count;
         public int Capacity = 10;
@@ -20,10 +20,17 @@ namespace DavidHeaps
         public void Resize(int size)
         {
             var newArray = new T[size];
-            for (int i = 0; i < size; i++)
+            int smallerSize = size;
+            if (Array.Length < smallerSize)
+            {
+                smallerSize = Array.Length;
+            }
+            for (int i = 0; i < smallerSize; i++)
             {
                 newArray[i] = Array[i];
             }
+
+            Array = newArray;
         }
 
         public void HeapifyUp(T item)
@@ -75,6 +82,28 @@ namespace DavidHeaps
         private void heapifyDown(int index)
         {
             T currentNode = Array[index];
+            if(Count <= index * 2 + 1)
+            {
+                return;
+            }
+            else if(Count <= index * 2 + 2)
+            {
+                T _leftNode = Array[index * 2 + 1];
+                if (currentNode.CompareTo(_leftNode) > 0)
+                {
+                    return;
+                }
+                T temp = _leftNode;
+                _leftNode = currentNode;
+                currentNode = temp;
+
+                Array[index * 2 + 1] = _leftNode;
+                Array[index] = currentNode;
+
+                heapifyDown(index * 2 + 1);
+                return;
+            }
+
             T leftNode = Array[index * 2 + 1];
             T rightNode = Array[index * 2 + 2];
 
@@ -94,7 +123,7 @@ namespace DavidHeaps
 
                 heapifyDown(index * 2 + 1);
             }
-            else if (currentNode.CompareTo(rightNode) > 0)
+            else if (currentNode.CompareTo(rightNode) < 0)
             {
                 T temp = rightNode;
                 rightNode = currentNode;

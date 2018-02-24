@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DavidHeaps
 {
-    class MinHeap<T> where T : IComparable
+    public class MinHeap<T> where T : IComparable
     {
         public int Count;
         public int Capacity = 10;
@@ -19,10 +19,13 @@ namespace DavidHeaps
 
         public void Resize(int size)
         {
-            Capacity = size;
             var newArray = new T[size];
-
-            for (int i = 0; i < Array.Length; i++)
+            int smallerSize = size;
+            if(Array.Length < smallerSize)
+            {
+                smallerSize = Array.Length;
+            }
+            for (int i = 0; i < smallerSize; i++)
             {
                 newArray[i] = Array[i];
             }
@@ -62,9 +65,6 @@ namespace DavidHeaps
 
                 heapifyUp((index - 1) / 2);
             }
-
-            Array[index] = currentNode;
-            Array[(index - 1) / 2] = parent;
         }
 
         public void HeapifyDown()
@@ -82,29 +82,30 @@ namespace DavidHeaps
         private void heapifyDown(int index)
         {
             T currentNode = Array[index];
-            T leftNode = Array[index * 2 + 1];
-            T rightNode = Array[index * 2 + 2];
-
-            if (Count > index * 2)
+            if (Count <= index * 2 + 1)
             {
                 return;
             }
-            if (Count > index * 2 + 1)
+            else if (Count <= index * 2 + 2)
             {
-                if (currentNode.CompareTo(leftNode) < 0)
+                T _leftNode = Array[index * 2 + 1];
+                if (currentNode.CompareTo(_leftNode) < 0)
                 {
                     return;
                 }
-                T temp = leftNode;
-                leftNode = currentNode;
+                T temp = _leftNode;
+                _leftNode = currentNode;
                 currentNode = temp;
 
-                Array[index * 2 + 1] = leftNode;
+                Array[index * 2 + 1] = _leftNode;
                 Array[index] = currentNode;
 
                 heapifyDown(index * 2 + 1);
-
+                return;
             }
+
+            T leftNode = Array[index * 2 + 1];
+            T rightNode = Array[index * 2 + 2];
 
             //if the left node is less than right node
             if (leftNode.CompareTo(rightNode) < 0)
@@ -122,7 +123,7 @@ namespace DavidHeaps
 
                 heapifyDown(index * 2 + 1);
             }
-            else if (rightNode.CompareTo(currentNode) < 0)
+            else if (currentNode.CompareTo(rightNode) > 0)
             {
                 T temp = rightNode;
                 rightNode = currentNode;

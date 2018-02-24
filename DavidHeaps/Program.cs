@@ -14,24 +14,31 @@ namespace DavidHeaps
             MaxHeap<int> maxHeap = new MaxHeap<int>();
 
             //DO NOT DELETE BEST LINE OF CODE
-            while(true)
+            while (true)
             {
                 Console.Write("Operation: ");
                 string operation = Console.ReadLine().ToString();
 
-                if (operation == "insert")
+                if (operation == "alex")
                 {
-                    Console.Write("Arguements: ");
+                    Console.Write("Count: ");
+                    int value = int.Parse(Console.ReadLine());
+                    int[] array = new int[value];
+
+                }
+                else if (operation == "insert")
+                {
+                    Console.Write("Value: ");
                     int value = int.Parse(Console.ReadLine());
                     minHeap.HeapifyUp(value);
                     maxHeap.HeapifyUp(value);
                 }
-                else if(operation == "delete")
+                else if (operation == "delete")
                 {
                     minHeap.HeapifyDown();
                     maxHeap.HeapifyDown();
                 }
-                else if(operation == "print")
+                else if (operation == "print")
                 {
                     Console.WriteLine("------------Maxheap------------");
                     for (int i = 0; i < maxHeap.Count; i++)
